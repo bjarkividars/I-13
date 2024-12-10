@@ -1,5 +1,6 @@
 import locale
 import os
+import gdown
 import streamlit as st
 import pandas as pd
 from utils.gemini import ModelHandler
@@ -8,6 +9,12 @@ from utils.model import train_and_predict
 from utils.text_utils import extract_features_from_text
 from dotenv import load_dotenv
 import plotly.express as px
+
+csv_url = 'https://drive.google.com/uc?id=1JiJctVOQi_feJIeHjONy7F_mh2wNv0u7&export=download'
+output = 'realtor-data.csv'
+if not os.path.exists(output):
+    print(f"File not found. Downloading {output}...")
+    gdown.download(csv_url, output, quiet=False)
 
 primaryColor = "#008ECC"
 secondaryColor = "#F0F8FF"
@@ -18,11 +25,14 @@ def on_city_change():
     if 'cleaned_data' in st.session_state and 'valid_cities' in st.session_state:
         selected_city_state = st.session_state.selected_city
         if selected_city_state is not None:
+            # Update filtered data
             st.session_state.filtered_data = preprocess_data(
                 st.session_state.cleaned_data, selected_city_state
             )
         else:
-            st.session_state.clear()
+            # Remove only the 'filtered_data' key from session state
+            if 'filtered_data' in st.session_state:
+                del st.session_state.filtered_data
 
 
 st.set_page_config(page_title="Real Estate Price Predictor", layout="centered")
@@ -36,7 +46,7 @@ if 'cleaned_data' not in st.session_state or 'valid_cities' not in st.session_st
     try:
         load_dotenv()
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-        raw_df = pd.read_csv('realtor-data.zip.csv')
+        raw_df = pd.read_csv('realtor-data.csv')
         cleaned_data, valid_cities = clean_data(raw_df)
         x_columns = list(cleaned_data.columns)
         x_columns.remove('city')
