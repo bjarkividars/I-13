@@ -158,8 +158,8 @@ if st.button("Predict Price", type="primary"):
 
                     if zip_code not in u_zip_code:
                         del extracted_features['zip_code']
-                        st.write(f"**Zip Code Not Used In Model:** The zip code {
-                                 zip_code} is not in the training data for this city, so it has been discarded.")
+                        st.write(f"""**Zip Code Not Used In Model:** The zip code {
+                                 zip_code} is not in the training data for this city, so it has been discarded.""")
                         st.write("**Available Zip Codes:**")
                         formatted_zip_codes = ", ".join(
                             [f"{int(zip_code)}" for zip_code in u_zip_code])
