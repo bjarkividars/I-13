@@ -1,9 +1,10 @@
 
-        
+
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+
 
 def train_and_predict(df, input_features):
     """
@@ -13,7 +14,8 @@ def train_and_predict(df, input_features):
     feature_cols = list(input_features.keys())
     if 'zip_code' in feature_cols:
         df = pd.get_dummies(df, columns=['zip_code'], prefix='zip')
-        feature_cols = [col for col in df.columns if col.startswith('zip_') or col in feature_cols]
+        feature_cols = [col for col in df.columns if col.startswith(
+            'zip_') or col in feature_cols]
 
         # Add one-hot encoding for the input features
         zip_code_col = f"zip_{input_features['zip_code']}"
@@ -30,7 +32,8 @@ def train_and_predict(df, input_features):
     y = clean_df['price']
 
     # Train-test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.1, random_state=42)
 
     # Train Random Forest model
     model = RandomForestRegressor(n_estimators=100, random_state=42)

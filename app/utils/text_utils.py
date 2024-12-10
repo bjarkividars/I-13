@@ -1,7 +1,9 @@
 import json
 import re
 from typing import Dict
+from utils.zillow import get_property_info
 from utils.gemini import ModelHandler
+import streamlit as st
 
 
 def extract_json_content(text: str) -> str:
@@ -50,6 +52,17 @@ def extract_features_from_text(description: str, model_handler: ModelHandler) ->
     if 'N/A' in response:
         return {}
 
+    if 'street' and 'zip' in response:
+        address_data = eval(response)
+        address = address_data['street']
+        city = st.session_state.selected_city.city
+        state = st.session_state.selected_city.state
+        zip_code = address_data['zip']
+
+        # Call the Zillow function with the extracted address
+        zillow_response = get_property_info(address, city, state, zip_code)
+        return zillow_response
+
     try:
         # Extract the JSON content from the response
         json_content = extract_json_content(response)
@@ -65,16 +78,17 @@ def extract_features_from_text(description: str, model_handler: ModelHandler) ->
                 # Find numbers in the string
                 match = re.search(r'\d+(\.\d+)?', value)
                 if match:
-                    cleaned_features[key] = float(match.group())  # Convert to float
+                    cleaned_features[key] = float(
+                        match.group())  # Convert to float
                 else:
                     # Assign None if no number found
                     cleaned_features[key] = None
             else:
                 cleaned_features[key] = value  # Keep numeric values as is
-
         return cleaned_features
 
     except json.JSONDecodeError:
-        raise ValueError(f"Failed to parse the extracted JSON content: {json_content}")
+        raise ValueError(
+            f"Failed to parse the extracted JSON content: {json_content}")
     except Exception as e:
         raise ValueError(f"Error processing the model's response: {e}")
