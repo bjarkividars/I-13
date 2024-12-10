@@ -195,8 +195,8 @@ if st.button("Predict Price", type="primary"):
 
                 st.subheader("Prediction Results")
                 st.write(f"**Predicted Price:** ${formatted_predicted_price}")
-                st.write(f"**Price Range (based on {int(confidence_mape)}% MAPE):** \\${
-                         formatted_lower_bound} - \\${formatted_upper_bound}")
+                st.write(f"""**Price Range (based on {int(confidence_mape)}% MAPE):** \\${
+                         formatted_lower_bound} - \\${formatted_upper_bound}""")
                 if (zestimate):
                     formatted_zestimate = locale.format_string(
                         "%d", float(zestimate), grouping=True)
