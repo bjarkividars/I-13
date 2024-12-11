@@ -37,7 +37,7 @@ def on_city_change():
 
 st.set_page_config(page_title="Prophecy", layout="centered")
 
-st.title("Real Estate Price Prediction")
+st.title("Prophecy")
 st.write(
     "Use this app to predict real estate prices based on a city and a description of the property."
 )
@@ -119,7 +119,7 @@ if 'filtered_data' in st.session_state and not st.session_state.filtered_data.em
 st.subheader("Property Description")
 property_description = st.text_area(
     "Enter a description of the property (size, bedrooms, bathrooms, zip code, etc.), or street and zip code:",
-    placeholder="Example: A 2500 sq ft house with 4 bedrooms, 3 bathrooms, on a 0.5-acre lot in Zip Code 23220. Or 1600 Pennsylvania Ave 20500."
+    placeholder="Example: A 2500 sq ft house with 4 bedrooms, 3 bathrooms, on a 0.5-acre lot in Zip Code 23220. Or 1600 Pennsylvania Ave."
 )
 
 if st.button("Predict Price", type="primary"):
@@ -206,4 +206,4 @@ if st.button("Predict Price", type="primary"):
                         'Try putting in your address to see a comparison with the Zestimate')
 
         except Exception as e:
-            st.error(f"Error in prediction. Make sure all values are correct")
+            st.error(f"Error in prediction. {e}")

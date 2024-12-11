@@ -13,12 +13,12 @@ def fetch_property_data(address, city, state, zip_code):
     conn = http.client.HTTPSConnection("zillow-working-api.p.rapidapi.com")
 
     headers = {
-        'x-rapidapi-key': os.environ['GEMINI_API_KEY'],
+        'x-rapidapi-key': os.environ['ZILLOW_API_KEY'],
         'x-rapidapi-host': "zillow-working-api.p.rapidapi.com"
     }
 
     # Construct the full address
-    full_address = f"{address}, {city}, {state} {zip_code}"
+    full_address = f"{address}, {city}, {state}"
     encoded_address = urllib.parse.quote(full_address)
 
     # Construct the API endpoint with the encoded address
@@ -37,24 +37,19 @@ def fetch_property_data(address, city, state, zip_code):
         return None
 
 
-def get_property_zestimate(address, city, state, zip_code):
-    """Fetch the Zestimate of the property."""
-    property_data = fetch_property_data(address, city, state, zip_code)
-    if not property_data:
-        return "Failed to fetch property data"
-
-    zestimate = property_data.get("propertyDetails", {}).get("zestimate")
-    return zestimate if zestimate is not None else "Zestimate not available"
-
-
 def get_property_info(address, city, state, zip_code):
     """Fetch general property information such as bedrooms, bathrooms, house size, and lot size."""
     property_data = fetch_property_data(address, city, state, zip_code)
+    print(property_data)
     if not property_data:
         return "Failed to fetch property data"
 
     property_details = property_data.get("propertyDetails", {})
+    address_details = property_details.get("address", {})
     result = {}
+    
+    result["zip_code"] = zip_code or address_details.get("zipcode", "N/A")
+
 
     bedrooms = property_details.get("bedrooms", "N/A")
     if bedrooms != "N/A":
@@ -76,8 +71,6 @@ def get_property_info(address, city, state, zip_code):
         result["acre_lot"] = lot_size_acres
 
     # Always include zip_code since it’s a required input
-    result["zip_code"] = zip_code
-
-    result['zestimate'] = get_property_zestimate(
-        address, city, state, zip_code)
+    result['zestimate'] = property_details.get(
+        "zestimate", "Zestimate not available")
     return result

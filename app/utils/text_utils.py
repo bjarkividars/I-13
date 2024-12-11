@@ -52,12 +52,14 @@ def extract_features_from_text(description: str, model_handler: ModelHandler) ->
     if 'N/A' in response:
         return {}
 
-    if 'street' and 'zip' in response:
+    if 'street' in response:
         address_data = eval(response)
         address = address_data['street']
         city = st.session_state.selected_city.city
         state = st.session_state.selected_city.state
-        zip_code = address_data['zip']
+        zip_code = ''
+        if 'zip' in address_data.keys():
+            zip_code = address_data['zip']
 
         # Call the Zillow function with the extracted address
         zillow_response = get_property_info(address, city, state, zip_code)
