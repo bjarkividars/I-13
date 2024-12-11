@@ -35,7 +35,7 @@ def on_city_change():
                 del st.session_state.filtered_data
 
 
-st.set_page_config(page_title="Real Estate Price Predictor", layout="centered")
+st.set_page_config(page_title="Prophecy", layout="centered")
 
 st.title("Real Estate Price Prediction")
 st.write(
