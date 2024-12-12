@@ -32,5 +32,4 @@ class ModelHandler:
 
         response = self.model.generate_content(
             f"Extract data for this request: {text}")
-        print(f'RESPONSE {response.text}')
         return response.text

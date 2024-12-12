@@ -31,7 +31,7 @@ def clean_data(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[CityState]]:
     city_state_objects = [
         CityState(row['city'], row['state']) for _, row in unique_city_states.iterrows()
     ]
-
+    
     return fdf, city_state_objects
 
 def preprocess_data(df, city_state):

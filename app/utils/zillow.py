@@ -40,16 +40,14 @@ def fetch_property_data(address, city, state, zip_code):
 def get_property_info(address, city, state, zip_code):
     """Fetch general property information such as bedrooms, bathrooms, house size, and lot size."""
     property_data = fetch_property_data(address, city, state, zip_code)
-    print(property_data)
     if not property_data:
         return "Failed to fetch property data"
 
     property_details = property_data.get("propertyDetails", {})
     address_details = property_details.get("address", {})
     result = {}
-    
-    result["zip_code"] = zip_code or address_details.get("zipcode", "N/A")
 
+    result["zip_code"] = zip_code or address_details.get("zipcode", "N/A")
 
     bedrooms = property_details.get("bedrooms", "N/A")
     if bedrooms != "N/A":
@@ -73,4 +71,5 @@ def get_property_info(address, city, state, zip_code):
     # Always include zip_code since it’s a required input
     result['zestimate'] = property_details.get(
         "zestimate", "Zestimate not available")
+    print(result['zestimate'])
     return result

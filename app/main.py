@@ -1,4 +1,3 @@
-import locale
 import os
 import gdown
 import streamlit as st
@@ -45,7 +44,6 @@ st.write(
 if 'cleaned_data' not in st.session_state or 'valid_cities' not in st.session_state:
     try:
         load_dotenv()
-        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         raw_df = pd.read_csv('realtor-data.csv')
         cleaned_data, valid_cities = clean_data(raw_df)
         x_columns = list(cleaned_data.columns)
@@ -118,7 +116,7 @@ if 'filtered_data' in st.session_state and not st.session_state.filtered_data.em
 
 st.subheader("Property Description")
 property_description = st.text_area(
-    "Enter a description of the property (size, bedrooms, bathrooms, zip code, etc.), or street and zip code:",
+    "Enter a description of the property (size, bedrooms, bathrooms, zip code, etc.), or street:",
     placeholder="Example: A 2500 sq ft house with 4 bedrooms, 3 bathrooms, on a 0.5-acre lot in Zip Code 23220. Or 1600 Pennsylvania Ave."
 )
 
@@ -186,20 +184,16 @@ if st.button("Predict Price", type="primary"):
                 lower_bound = predicted_price * (1 - confidence_mape / 100)
                 upper_bound = predicted_price * (1 + confidence_mape / 100)
 
-                formatted_predicted_price = locale.format_string(
-                    "%d", predicted_price, grouping=True)
-                formatted_lower_bound = locale.format_string(
-                    "%d", lower_bound, grouping=True)
-                formatted_upper_bound = locale.format_string(
-                    "%d", upper_bound, grouping=True)
+                formatted_predicted_price = f"{predicted_price:,.0f}"
+                formatted_lower_bound = f"{lower_bound:,.0f}"
+                formatted_upper_bound = f"{upper_bound:,.0f}"
 
                 st.subheader("Prediction Results")
                 st.write(f"**Predicted Price:** ${formatted_predicted_price}")
                 st.write(f"""**Price Range (based on {int(confidence_mape)}% MAPE):** \\${
-                         formatted_lower_bound} - \\${formatted_upper_bound}""")
-                if (zestimate):
-                    formatted_zestimate = locale.format_string(
-                        "%d", float(zestimate), grouping=True)
+                        formatted_lower_bound} - \\${formatted_upper_bound}""")
+                if zestimate:
+                    formatted_zestimate = f"{float(zestimate):,.0f}"
                     st.write(f"**Zestimate:** ${formatted_zestimate}")
                 else:
                     st.write(
